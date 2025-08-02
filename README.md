@@ -1,155 +1,188 @@
-Thoughtful AI Customer Support Agent
+# Thoughtful AI Customer Support Agent
 
 ![UI Screenshot](ui.png)
 
-Overview
-This project implements a conversational AI agent for Thoughtful AI, designed to answer common questions about Thoughtful AI's automation agents (EVA, CAM, PHIL, etc.) using a predefined dataset. For unmatched queries, it falls back to the Groq API (model: llama-3.3-70b-versatile). The app uses FAISS for vector embeddings and similarity scoring, with a Streamlit-based web interface for user interaction. API keys are securely managed using a .env file locally or Replit Secrets.
-Features
+## Overview
 
-Conversational Interface: A user-friendly chat UI built with Streamlit.
-Predefined Responses: Answers questions about Thoughtful AI's agents using a hardcoded JSON dataset.
-Vector Search: Uses FAISS (version 1.7.4) and SentenceTransformer for efficient similarity-based question matching.
-Fallback to Groq: Handles unmatched queries using the Groq API client.
-Error Handling: Gracefully manages invalid inputs and API errors.
-Chat History: Maintains conversation context within the session.
-Secure API Key Management: Uses .env file locally or Replit Secrets for the Groq API key.
+The Thoughtful AI Customer Support Agent is a conversational AI application that answers questions about Thoughtful AI's automation agents (EVA, CAM, PHIL, etc.) using a predefined dataset. It leverages FAISS for vector-based similarity search and falls back to the Groq API (model: llama-3.3-70b-versatile) for unmatched queries. The app features a modern Streamlit-based web interface with secure API key management via .env or Replit Secrets, and robust error handling.
 
-Prerequisites
+## Features
 
-Python: Version 3.8–3.12
-Replit Account: For hosting on Replit (preferred for submission)
-Grok API Key: Obtain from console.groq.com for fallback responses
+- **Conversational Interface**: A user-friendly chat UI built with Streamlit
+- **Predefined Responses**: Answers questions from a hardcoded JSON dataset about Thoughtful AI's agents
+- **Vector Search**: Uses FAISS and SentenceTransformer for efficient question matching
+- **Groq Fallback**: Handles unmatched queries with the Groq API
+- **Chat History**: Displays conversation history with session persistence
+- **Secure Configuration**: Manages the Groq API key via .env (local) or Replit Secrets
+- **Error Handling**: Gracefully manages invalid inputs and API errors
 
-Setup Instructions
-Option 1: Running on Replit (Preferred)
+## Prerequisites
 
-Create a New Replit Project:
+- **Python**: 3.8–3.12
+- **Replit account**: For hosting on Replit (preferred for submission)
+- **Groq API key**: From [console.groq.com](https://console.groq.com)
+- **Conda**: Recommended for local FAISS installation on Anaconda
 
-Go to Replit and create a new Python project.
-Upload or copy the following files:
-main.py: The main application code.
-requirements.txt: Lists dependencies.
-.replit: Configures the run command.
-.env.example: Template for environment variables (reference only).
+## Setup
 
+### Option 1: Replit (Preferred)
 
+#### 1. Create a Python Project
 
+1. Go to [Replit](https://replit.com) and create a new Python project
+2. Add the following files:
+   - `main.py`: Core application code
+   - `requirements.txt`:
+     ```
+     streamlit
+     sentence-transformers
+     faiss-cpu==1.7.4
+     groq
+     python-dotenv
+     ```
+   - `.replit`:
+     ```
+     run = "streamlit run main.py --server.port 8000"
+     ```
+   - `.env.example` (for reference)
 
-Set Up requirements.txt:Create or ensure requirements.txt contains:
-streamlit
-sentence-transformers
-faiss-cpu==1.7.4
-groq
-python-dotenv
+#### 2. Configure API Key
 
+1. In Replit's Secrets tab (lock icon), add:
+   - **Key**: `GROQ_API_KEY`
+   - **Value**: `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`
 
-Note: faiss-cpu==1.7.4 ensures compatibility with Python 3.12.
+#### 3. Run the App
 
+1. Click **Run** or use the Replit Shell:
+   ```bash
+   pip install -r requirements.txt
+   streamlit run main.py --server.port 8000
+   ```
+2. Access the app via the Replit URL (e.g., `https://<your-repl-id>.repl.co`)
 
-Configure .replit:Create or ensure .replit contains:
-run = "streamlit run main.py --server.port 8000"
+### Option 2: Local Setup
 
+#### 1. Set Up Project
 
-Add Groq API Key:
+1. Create a directory (e.g., `/Users/mercelvubangsi/Documents/GitHub/thoughtaisupport/`)
+2. Add `main.py`, `requirements.txt`, and `.env.example` from this project
 
-In Replit, go to the Secrets tab (lock icon in the sidebar).
-Add a secret with:
-Key: GROQ_API_KEY
-Value: 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
+#### 2. Configure Environment
 
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+2. Edit `.env`:
+   ```
+   GROQ_API_KEY=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
+   ```
+3. Add `.env` to `.gitignore`:
+   ```
+   .env
+   __pycache__/
+   *.pyc
+   ```
 
-Note: Replit Secrets replace the need for a .env file in Replit.
+#### 3. Set Up Conda Environment (Recommended for Anaconda)
 
+```bash
+conda create -n thoughtai python=3.10
+conda activate thoughtai
+```
 
-Run the App:
+#### 4. Install Dependencies
 
-Click the Run button in Replit, or in the Replit Shell, execute:pip install -r requirements.txt
-streamlit run main.py --server.port 8000
+1. Install FAISS via Conda (preferred for Anaconda):
+   ```bash
+   conda install -c pytorch faiss-cpu
+   ```
+2. Install remaining dependencies:
+   ```bash
+   pip install streamlit sentence-transformers groq python-dotenv
+   ```
 
+#### 5. Run the App
 
-Access the app via the Replit-provided URL (e.g., https://<your-repl-id>.repl.co).
-
-
-
-Option 2: Running Locally
-
-Clone or Set Up the Project:
-
-Clone the repository (if hosted on GitHub) or create a directory with:
-main.py: The main application code.
-requirements.txt: As above.
-.env.example: Template for environment variables.
-
-
-
-
-Create a .env File:
-
-Copy .env.example to .env:cp .env.example .env
-
-
-Edit .env to include your Groq API key:GROQ_API_KEY=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
-
-
-Ensure .env is added to .gitignore to prevent version control exposure.
-
-
-Set Up a Virtual Environment (recommended):
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-
-Install Dependencies:
-pip install -r requirements.txt
-
-Or manually:
-pip install streamlit sentence-transformers faiss-cpu==1.7.4 groq python-dotenv
-
-
-Run the App:
+```bash
 streamlit run main.py
+```
 
+Open [http://localhost:8501](http://localhost:8501) in your browser.
 
-Open http://localhost:8501 in your browser to interact with the app.
+## Usage
 
+1. **Access**: Use the Replit URL or `http://localhost:8501` (local)
+2. **Ask Questions**: Enter queries about Thoughtful AI's agents (e.g., "What does EVA do?") in the chat input
+3. **View Responses**: The app matches questions to the dataset using FAISS. Unmatched queries use the Groq API
+4. **Chat History**: Previous messages are displayed in the interface
 
+## Troubleshooting
 
-Usage
+### FAISS Errors
 
-Access the App: Open the Replit URL or http://localhost:8501 (local).
-Ask Questions: Enter questions about Thoughtful AI’s agents (e.g., "What does EVA do?") in the chat input.
-View Responses: The app matches questions to the predefined dataset using FAISS-based similarity search. Unmatched queries are answered by the Groq API.
-Chat History: Previous messages are displayed in the interface.
+If you encounter `AttributeError: module 'faiss' has no attribute 'IndexFlatL2'`:
 
-Troubleshooting
+1. **Use Conda for FAISS**:
+   ```bash
+   conda install -c pytorch faiss-cpu
+   ```
 
-Groq API Errors:
-Invalid API Key: Ensure the GROQ_API_KEY is correctly set in .env (local) or Replit Secrets. Verify with:echo $GROQ_API_KEY  # macOS/Linux
-echo %GROQ_API_KEY%  # Windows
+2. **Alternative pip installation**:
+   ```bash
+   pip install faiss-cpu==1.8.0
+   ```
 
+3. **Clear conflicting installations**:
+   ```bash
+   pip uninstall faiss-cpu faiss-gpu -y
+   conda remove faiss faiss-cpu faiss-gpu --force
+   ```
 
-Module Errors: Confirm groq is installed (pip show groq) and no local groq.py file exists, which could cause conflicts.
+### Groq API Errors
 
+1. **Invalid Key**: Verify `GROQ_API_KEY` in `.env` or Replit Secrets:
+   ```bash
+   echo $GROQ_API_KEY  # macOS/Linux
+   echo %GROQ_API_KEY%  # Windows
+   ```
 
-FAISS Errors: Use faiss-cpu==1.7.4 to avoid compatibility issues. Alternatively, install via Conda:conda install -c pytorch faiss-cpu
+2. **Module Errors**: Ensure no `groq.py` file exists and groq is installed:
+   ```bash
+   pip show groq
+   pip install --upgrade groq
+   ```
 
+### Other Issues
 
-Dependency Conflicts: Use a clean Python environment (e.g., Conda or virtualenv) to avoid conflicts.
-Logs: Check terminal logs for specific errors and ensure an active internet connection for Groq API calls.
-.env Issues: Ensure .env is in the project root and python-dotenv is installed. If the key isn’t loaded, verify the file syntax.
+- **.env Issues**: Confirm `.env` is in the project root and `python-dotenv` is installed
+- **Dependencies**: Use a clean Conda environment to avoid conflicts:
+  ```bash
+  conda create -n thoughtai python=3.10
+  conda activate thoughtai
+  ```
+- **Logs**: Check terminal for errors. Ensure an active internet connection for Groq API
 
-Project Structure
+## Project Structure
 
-main.py: Core application logic with Streamlit UI, FAISS vector search, and Groq API integration.
-requirements.txt: Lists required Python packages.
-.replit: Configures Replit’s run command for Streamlit.
-.env.example: Template for environment variables (do not commit .env to version control).
-.gitignore: Excludes .env and virtual environment files (recommended).
+```
+thoughtaisupport/
+├── main.py              # Core logic with Streamlit UI, FAISS search, and Groq integration
+├── requirements.txt     # Python package dependencies
+├── .replit             # Replit run configuration
+├── .env.example        # Environment variable template (do not commit .env)
+├── .gitignore          # Excludes .env, Conda/virtualenv, and cache files
+└── README.md           # This file
+```
 
-Evaluation Notes
+## Evaluation Criteria
 
-Functionality: The app correctly handles predefined questions and falls back to Groq for others.
-Code Quality: Modular, readable code with comments, error handling, and secure API key management.
-Robustness: Handles invalid inputs, API errors, and missing environment variables gracefully.
+- **Functionality**: Accurately handles predefined and fallback queries
+- **Code Quality**: Clean, modular code with comments and secure API key management
+- **Robustness**: Manages errors and compatibility issues effectively
+- **UI**: Professional, user-friendly interface with modern styling and usability features
 
-For questions or issues, contact the developer or refer to the Replit/GitHub repository for updates.
+## Contact
+
+For issues or questions, refer to the Replit/GitHub repository or contact the developer.
